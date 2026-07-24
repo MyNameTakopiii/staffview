@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { initSocket, getSocket } from './socketClient';
+import { initSocket } from './socketClient';
 import { isPusherConfigured, getStaffChannel, triggerPusherEvent } from './pusherClient';
 
 export type SyncMode = 'socket.io' | 'pusher' | 'serverless-poll';
@@ -12,15 +12,22 @@ class RealtimeHub {
   private initialized = false;
   private socketInstance: Socket | null = null;
   private pollInterval: any = null;
+  private connected = false;
 
   public async initialize(): Promise<SyncMode> {
-    if (this.initialized) return this.mode;
+    if (this.initialized) {
+      if (this.mode === 'socket.io' && this.socketInstance) {
+        this.connected = this.socketInstance.connected;
+      }
+      return this.mode;
+    }
     this.initialized = true;
 
     // Check explicit env override or Pusher key availability
     const envMode = process.env.NEXT_PUBLIC_SYNC_MODE;
     if (envMode === 'pusher' || isPusherConfigured()) {
       this.mode = 'pusher';
+      this.connected = true;
       this.setupPusher();
       return this.mode;
     }
@@ -29,22 +36,27 @@ class RealtimeHub {
     try {
       this.socketInstance = await initSocket();
       this.mode = 'socket.io';
+      this.connected = this.socketInstance.connected;
       this.setupSocketListeners();
     } catch (err) {
       console.warn('Socket.IO connection failed, switching to Serverless mode', err);
       this.mode = 'serverless-poll';
+      this.connected = true;
       this.setupPolling();
     }
 
     return this.mode;
   }
 
-  public getMode(): SyncMode {
-    return this.mode;
+  public isConnected(): boolean {
+    if (this.mode === 'socket.io' && this.socketInstance) {
+      return this.socketInstance.connected;
+    }
+    return this.connected;
   }
 
-  public setMode(newMode: SyncMode) {
-    this.mode = newMode;
+  public getMode(): SyncMode {
+    return this.mode;
   }
 
   // Subscribe to real-time events
@@ -72,7 +84,17 @@ class RealtimeHub {
 
   // Emit event to external real-time server
   public emit(event: string, data: any) {
-    // 1. Local listener dispatch
+    // 1. Local listener dispatch (map patient event name to staff event name)
+    const staffEventMap: Record<string, string> = {
+      patient_update: 'staff_patient_update',
+      patient_status: 'staff_patient_status',
+      patient_submit: 'staff_patient_submit',
+      patient_focus: 'staff_patient_focus',
+    };
+
+    if (staffEventMap[event]) {
+      this.emitLocal(staffEventMap[event], data);
+    }
     this.emitLocal(event, data);
 
     // 2. Socket.IO mode
@@ -89,9 +111,17 @@ class RealtimeHub {
   private setupSocketListeners() {
     if (!this.socketInstance) return;
 
+    this.socketInstance.on('connect', () => {
+      this.connected = true;
+      this.emitLocal('connect', true);
+    });
+
+    this.socketInstance.on('disconnect', () => {
+      this.connected = false;
+      this.emitLocal('disconnect', false);
+    });
+
     const events = [
-      'connect',
-      'disconnect',
       'staff_patient_update',
       'staff_patient_status',
       'staff_patient_submit',
@@ -106,6 +136,7 @@ class RealtimeHub {
   }
 
   private setupPusher() {
+    this.connected = true;
     const channel = getStaffChannel();
     if (!channel) {
       this.setupPolling();
@@ -129,10 +160,11 @@ class RealtimeHub {
   }
 
   private setupPolling() {
+    this.connected = true;
     if (this.pollInterval) clearInterval(this.pollInterval);
 
     this.emitLocal('connect', true);
-    let lastTimestamp = 0;
+    let lastHash = '';
 
     this.pollInterval = setInterval(async () => {
       try {
@@ -140,8 +172,9 @@ class RealtimeHub {
         if (!res.ok) return;
         const data = await res.json();
 
-        if (data.lastUpdated && data.lastUpdated > lastTimestamp) {
-          lastTimestamp = data.lastUpdated;
+        const currentHash = JSON.stringify(data);
+        if (currentHash !== lastHash) {
+          lastHash = currentHash;
           if (data.patientData) this.emitLocal('staff_patient_update', data.patientData);
           if (data.status) this.emitLocal('staff_patient_status', data.status);
           if (data.activeField !== undefined) this.emitLocal('staff_patient_focus', data.activeField);
@@ -149,7 +182,7 @@ class RealtimeHub {
       } catch {
         // Ignore polling errors silently
       }
-    }, 2000);
+    }, 1000);
   }
 }
 

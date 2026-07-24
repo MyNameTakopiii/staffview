@@ -24,7 +24,7 @@ export function useStaffSync() {
 
     realtimeHub.initialize().then((mode) => {
       if (!isMounted) return;
-      setIsConnected(true);
+      setIsConnected(realtimeHub.isConnected());
 
       const modeLabel =
         mode === 'pusher'

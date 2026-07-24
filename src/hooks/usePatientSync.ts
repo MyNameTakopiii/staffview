@@ -10,7 +10,7 @@ export function usePatientSync() {
 
     realtimeHub.initialize().then(() => {
       if (isMounted) {
-        setIsConnected(true);
+        setIsConnected(realtimeHub.isConnected());
       }
     });
 
