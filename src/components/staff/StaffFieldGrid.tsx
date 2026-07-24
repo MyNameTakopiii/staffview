@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { PatientFormData } from '@/types/patient';
+import { getPatientFieldList } from '@/data';
 
 interface StaffFieldGridProps {
   data: PatientFormData;
@@ -55,36 +56,7 @@ export const StaffFieldGrid: React.FC<StaffFieldGridProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  const fields = [
-    { id: 'firstName', label: 'First Name', value: data.firstName, required: true },
-    { id: 'middleName', label: 'Middle Name', value: data.middleName, required: false },
-    { id: 'lastName', label: 'Last Name', value: data.lastName, required: true },
-    { id: 'dateOfBirth', label: 'Date of Birth', value: data.dateOfBirth, required: true },
-    { id: 'gender', label: 'Gender', value: data.gender, required: true },
-    { id: 'phoneNumber', label: 'Phone Number', value: data.phoneNumber, required: true },
-    { id: 'email', label: 'Email Address', value: data.email, required: true },
-    { id: 'address', label: 'Full Address', value: data.address, required: true, fullWidth: true },
-    {
-      id: 'preferredLanguage',
-      label: 'Preferred Language',
-      value: data.preferredLanguage,
-      required: true,
-    },
-    { id: 'nationality', label: 'Nationality', value: data.nationality, required: true },
-    {
-      id: 'emergencyContactName',
-      label: 'Emergency Contact Name',
-      value: data.emergencyContactName,
-      required: false,
-    },
-    {
-      id: 'emergencyContactRelationship',
-      label: 'Emergency Relationship',
-      value: data.emergencyContactRelationship,
-      required: false,
-    },
-    { id: 'religion', label: 'Religion', value: data.religion, required: false },
-  ];
+  const fields = getPatientFieldList(data);
 
   const query = searchQuery.trim().toLowerCase();
   const filteredFields = fields.filter((field) => {

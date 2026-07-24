@@ -1,6 +1,6 @@
 # Project Structure Documentation
 
-Version: 1.2
+Version: 1.3
 
 ---
 
@@ -30,16 +30,19 @@ staffview/
 │   │   ├── shared/                 # Shared widgets (Header, StatusBadge)
 │   │   ├── patient/                # Patient form containers & field inputs
 │   │   └── staff/                  # Staff monitoring container & mirrored data grid
+│   ├── context/                    # React Context providers (ThemeContext, SyncContext)
+│   ├── data/                       # Static data & field definitions (patientFields, patientOptions)
 │   ├── hooks/                      # Reusable React hooks
 │   │   ├── usePatientSync.ts       # Socket emitter hook for patient form
 │   │   ├── useStaffSync.ts         # Socket listener hook for staff view
 │   │   └── useActivityTimer.ts     # Keystroke & 5s idle activity timer
 │   ├── lib/                        # Core logic modules
 │   │   ├── validation/             # Zod validation schema (patientSchema.ts)
-│   │   └── sync/                   # Socket.IO client initialization
+│   │   └── sync/                   # Real-time socket & pusher hub adapters
 │   ├── types/                      # TypeScript definitions (patient.ts)
 │   └── pages/api/                  # Next.js API Routes
-│       └── socket.ts               # Socket.IO WebSocket server endpoint
+│       ├── socket.ts               # Socket.IO WebSocket server endpoint
+│       └── pusher.ts               # Pusher & Serverless relay endpoint
 ├── Dockerfile                      # Multi-stage Production Dockerfile
 ├── Dockerfile.dev                  # Development Dockerfile with hot reload
 ├── docker-compose.yml              # Production Docker Compose stack configuration
