@@ -1,52 +1,47 @@
-import { useEffect, useRef, useState } from 'react';
-import { Socket } from 'socket.io-client';
-import { initSocket } from '@/lib/sync/socketClient';
+import { useEffect, useState } from 'react';
+import { realtimeHub } from '@/lib/sync/realtimeHub';
 import { PatientFormData, PatientStatus } from '@/types/patient';
 
 export function usePatientSync() {
-  const socketRef = useRef<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    initSocket().then((sock) => {
-      if (isMounted) {
-        socketRef.current = sock;
-        setIsConnected(sock.connected);
 
-        sock.on('connect', () => setIsConnected(true));
-        sock.on('disconnect', () => setIsConnected(false));
+    realtimeHub.initialize().then(() => {
+      if (isMounted) {
+        setIsConnected(true);
       }
     });
 
+    const handleConnect = () => setIsConnected(true);
+    const handleDisconnect = () => setIsConnected(false);
+
+    realtimeHub.on('connect', handleConnect);
+    realtimeHub.on('disconnect', handleDisconnect);
+
     return () => {
       isMounted = false;
+      realtimeHub.off('connect', handleConnect);
+      realtimeHub.off('disconnect', handleDisconnect);
     };
   }, []);
 
   const emitInputChange = (formData: PatientFormData) => {
-    if (socketRef.current) {
-      socketRef.current.emit('patient_update', formData);
-    }
+    realtimeHub.emit('patient_update', formData);
   };
 
   const emitStatusChange = (status: PatientStatus) => {
-    if (socketRef.current) {
-      socketRef.current.emit('patient_status', status);
-    }
+    realtimeHub.emit('patient_status', status);
   };
 
   const emitSubmit = (formData: PatientFormData) => {
-    if (socketRef.current) {
-      socketRef.current.emit('patient_submit', formData);
-      socketRef.current.emit('patient_status', 'submitted');
-    }
+    realtimeHub.emit('patient_submit', formData);
+    realtimeHub.emit('patient_status', 'submitted');
   };
 
   const emitFieldFocus = (fieldId: string | null) => {
-    if (socketRef.current) {
-      socketRef.current.emit('patient_focus', fieldId);
-    }
+    realtimeHub.emit('patient_focus', fieldId);
   };
 
   return {

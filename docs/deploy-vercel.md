@@ -1,60 +1,44 @@
 # Vercel Staging & Deployment Guide
 
-This document describes how to deploy the **StaffView** Next.js application to **Vercel Staging / Preview** and Production.
+This document describes how to deploy the **StaffView** Next.js application to **Vercel Staging / Preview** and Production with hybrid Real-Time support (Pusher Channels / Serverless Event Relay + Socket.IO).
 
 ---
 
-## 🚀 Quick Deployment to Vercel Staging
+## ⚡ Real-Time Provider Modes on Vercel
 
-### Step 1: Vercel CLI Authentication
-If Vercel CLI is not logged in on your machine, authenticate first:
+The application features a hybrid **`RealtimeHub`** system:
+1. **Pusher Channels (Recommended for Vercel)**: Set Pusher Environment Variables in Vercel.
+2. **Serverless Event Relay (Zero-Config Fallback)**: Automatically active if Pusher keys are omitted; prevents disconnect loops on Vercel.
+3. **Socket.IO (Local & Docker)**: Preserved 100% for local development (`bun dev`) and Docker containers (`docker compose up`).
 
+---
+
+## 🔑 Environment Variables for Pusher on Vercel (Optional)
+
+Add these to your **Vercel Project Settings -> Environment Variables**:
+
+| Variable Name | Description | Location |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_PUSHER_KEY` | Pusher App Key | Client & Server |
+| `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher Cluster (e.g. `ap1`) | Client & Server |
+| `PUSHER_APP_ID` | Pusher App ID | Server |
+| `PUSHER_SECRET` | Pusher App Secret | Server |
+
+---
+
+## 🚀 Quick Deployment Commands
+
+### Step 1: Login to Vercel CLI
 ```bash
 bunx vercel login
 ```
 
 ### Step 2: Deploy to Staging (Preview Environment)
-To deploy a new preview/staging build:
-
 ```bash
 bunx vercel
 ```
-Follow the prompts:
-- **Set up and deploy?**: `y`
-- **Which scope?**: Select your Vercel account/team.
-- **Link to existing project?**: `n` (or `y` if already linked)
-- **Project Name**: `staffview-staging` (or default)
-- **Directory**: `./`
-
-Vercel will build the project and output a unique **Preview/Staging URL** (e.g., `https://staffview-xxx.vercel.app`).
 
 ### Step 3: Deploy to Production
-To promote your staging deployment to production:
-
 ```bash
 bunx vercel --prod
 ```
-
----
-
-## ⚙️ Vercel Environment Configuration (`vercel.json`)
-
-The project includes `vercel.json` pre-configured for Bun and Next.js 15:
-
-```json
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "buildCommand": "bun run build",
-  "installCommand": "bun install"
-}
-```
-
----
-
-## ⚡ Important Architecture Note: WebSockets on Vercel
-
-> [!IMPORTANT]
-> - **Vercel Serverless Functions**: Next.js pages and API routes run as stateless serverless functions on Vercel.
-> - **Real-Time WebSocket Server**: For real-time Socket.IO synchronization between `/patient` and `/staff`, set the `NEXT_PUBLIC_SOCKET_URL` environment variable in Vercel Project Settings to point to your persistent Docker/Node backend instance (e.g., hosted on Render, Railway, Fly.io, or VPS).
-> - When `NEXT_PUBLIC_SOCKET_URL` is omitted, the app connects relative to `/api/socket`.
