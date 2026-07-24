@@ -23,8 +23,17 @@ class RealtimeHub {
     }
     this.initialized = true;
 
-    // Check explicit env override or Pusher key availability
     const envMode = process.env.NEXT_PUBLIC_SYNC_MODE;
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+
+    // Detect if running on Vercel deployment
+    const isVercelHost =
+      typeof window !== 'undefined' &&
+      (window.location.hostname.endsWith('vercel.app') || window.location.hostname.includes('vercel'));
+
+    // On Vercel without an external socket URL, Socket.IO fails due to serverless execution model
+    const isVercelServerless = isVercelHost && !socketUrl;
+
     if (envMode === 'pusher' || isPusherConfigured()) {
       this.mode = 'pusher';
       this.connected = true;
@@ -32,7 +41,14 @@ class RealtimeHub {
       return this.mode;
     }
 
-    // Default to Socket.IO
+    if (envMode === 'serverless-poll' || isVercelServerless) {
+      this.mode = 'serverless-poll';
+      this.connected = true;
+      this.setupPolling();
+      return this.mode;
+    }
+
+    // Default to Socket.IO for Local & Docker host
     try {
       this.socketInstance = await initSocket();
       this.mode = 'socket.io';
@@ -166,7 +182,8 @@ class RealtimeHub {
     this.emitLocal('connect', true);
     let lastHash = '';
 
-    this.pollInterval = setInterval(async () => {
+    // Immediately fetch initial state
+    const fetchState = async () => {
       try {
         const res = await fetch('/api/pusher');
         if (!res.ok) return;
@@ -182,7 +199,10 @@ class RealtimeHub {
       } catch {
         // Ignore polling errors silently
       }
-    }, 1000);
+    };
+
+    fetchState();
+    this.pollInterval = setInterval(fetchState, 1000);
   }
 }
 
