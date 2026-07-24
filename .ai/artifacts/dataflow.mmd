@@ -1,0 +1,26 @@
+flowchart TD
+    subgraph PatientView["Patient View Interface (/patient)"]
+        A[Patient Types Input] --> B[React Hook Form State Update]
+        B --> C[Zod Field Validation]
+        B --> D[Reset 5s Activity Idle Timer]
+        D --> E[Status: Actively Filling In]
+        B --> F[Debounced Socket Event Emission]
+        D -- "5s Idle Timeout" --> G[Status: Inactive]
+        H[Patient Clicks Submit] --> I[Form Validation Check]
+        I -- "Valid" --> J[Status: Submitted & Emit Submit Event]
+    end
+
+    subgraph SyncChannel["Real-Time WebSockets Server Hub"]
+        F --> K((WS Server Event Relay))
+        E --> K
+        G --> K
+        J --> K
+    end
+
+    subgraph StaffView["Staff Monitoring Interface (/staff)"]
+        K --> L[Socket Event Listener]
+        L --> M[Update Staff Mirrored State]
+        L --> N[Update Status Badge Indicator]
+        M --> O[Render Live Field Card Grid]
+        N --> P[Render Status Badge: Filling In / Inactive / Submitted]
+    end

@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: 248 250 252; /* slate-50 */
+    --bg-card: 255 255 255; /* white */
+    --border-color: 226 232 240; /* slate-200 */
+    --text-primary: 15 23 42; /* slate-900 */
+    --text-secondary: 100 116 139; /* slate-500 */
+    --color-primary: 37 99 235; /* blue-600 */
+    --color-secondary: 13 148 136; /* teal-600 */
+
+    /* Semantic Status Colors (Light Mode) */
+    --color-success: 16 185 129; /* emerald-500 */
+    --color-success-bg: 236 253 245; /* emerald-50 */
+    --color-success-text: 6 95 70; /* emerald-800 */
+
+    --color-warning: 245 158 11; /* amber-500 */
+    --color-warning-bg: 254 243 199; /* amber-100 */
+    --color-warning-text: 146 64 14; /* amber-800 */
+
+    --color-error: 244 63 94; /* rose-500 */
+    --color-error-bg: 255 241 242; /* rose-50 */
+    --color-error-text: 159 18 57; /* rose-800 */
+
+    --color-info: 59 130 246; /* blue-500 */
+    --color-info-bg: 239 246 255; /* blue-50 */
+    --color-info-text: 30 64 175; /* blue-800 */
+  }
+
+  .dark {
+    --bg-main: 2 6 23; /* slate-950 */
+    --bg-card: 15 23 42; /* slate-900 */
+    --border-color: 30 41 59; /* slate-800 */
+    --text-primary: 248 250 252; /* slate-50 */
+    --text-secondary: 148 163 184; /* slate-400 */
+    --color-primary: 6 182 212; /* cyan-500 */
+    --color-secondary: 37 99 235; /* blue-600 */
+
+    /* Semantic Status Colors (Dark Mode) */
+    --color-success: 52 211 153; /* emerald-400 */
+    --color-success-bg: 6 78 59; /* emerald-900/40 */
+    --color-success-text: 167 243 208; /* emerald-200 */
+
+    --color-warning: 251 191 36; /* amber-400 */
+    --color-warning-bg: 120 53 15; /* amber-900/40 */
+    --color-warning-text: 253 230 138; /* amber-200 */
+
+    --color-error: 251 113 133; /* rose-400 */
+    --color-error-bg: 136 19 55; /* rose-900/40 */
+    --color-error-text: 254 205 211; /* rose-200 */
+
+    --color-info: 96 165 250; /* blue-400 */
+    --color-info-bg: 30 58 138; /* blue-900/40 */
+    --color-info-text: 191 219 254; /* blue-200 */
+  }
+}
+
+body {
+  background-color: rgb(var(--bg-main));
+  color: rgb(var(--text-primary));
+  min-height: 100vh;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}

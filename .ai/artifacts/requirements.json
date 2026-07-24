@@ -1,0 +1,205 @@
+{
+  "functional_requirements": [
+    {
+      "id": "REQ-F001",
+      "title": "Patient Personal Details Input",
+      "quote": "Create a form that allows patients to input their personal details, including: First Name, Middle Name (optional), Last Name, Date of Birth, Gender, Phone Number, Email, Address, Preferred Language, Nationality, Emergency Contact (optional: name and relationship), Religion (optional).",
+      "explanation": "Patient form must collect patient details with specific required and optional fields.",
+      "required_fields": [
+        "First Name",
+        "Last Name",
+        "Date of Birth",
+        "Gender",
+        "Phone Number",
+        "Email",
+        "Address",
+        "Preferred Language",
+        "Nationality"
+      ],
+      "optional_fields": ["Middle Name", "Emergency Contact (name and relationship)", "Religion"],
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-F002",
+      "title": "Patient Form Validation",
+      "quote": "Include form validation (e.g., required fields, valid phone number, email if applicable).",
+      "explanation": "Form inputs must be validated before submission/during input, ensuring required fields are populated and phone/email formats are valid.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-F003",
+      "title": "Staff View Real-Time Field Display",
+      "quote": "Display each field from the patient form in real-time as the patient inputs or updates information.",
+      "explanation": "Staff interface must render every field value in real time as changes occur on the patient form.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-F004",
+      "title": "Patient Activity Indicators on Staff View",
+      "quote": "Display indicators to show if the patient has submitted, is actively filling in, or is inactive in the form.",
+      "explanation": "Staff interface must show status indicators: Submitted, Actively Filling In, or Inactive.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-F005",
+      "title": "Real-Time Data Synchronization",
+      "quote": "Use WebSockets or any suitable real-time technology to synchronize data between the patient and staff views instantly.",
+      "explanation": "Instantly propagate input changes and state changes from patient form to staff view using real-time communication.",
+      "confidence": "High"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "id": "REQ-NF001",
+      "title": "Responsive Design for Patient Form",
+      "quote": "Responsive design that functions well on mobile and desktop devices.",
+      "explanation": "Patient form UI must adapt seamlessly across screen sizes.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-NF002",
+      "title": "Responsive Design for Staff View",
+      "quote": "Provide a responsive design for staff members, adapting to various screen sizes.",
+      "explanation": "Staff view UI must adapt seamlessly across screen sizes.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-NF003",
+      "title": "Instant Data Sync Latency",
+      "quote": "synchronize data between the patient and staff views instantly.",
+      "explanation": "Updates on patient form should reflect immediately on staff view without noticeable lag.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-NF004",
+      "title": "Simple and Intuitive UX/UI",
+      "quote": "A simple, intuitive design that provides a smooth experience for both patient and staff users.",
+      "explanation": "Interfaces should be user-friendly and clean.",
+      "confidence": "High"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "REQ-C001",
+      "title": "Timeline Constraint",
+      "quote": "Each candidate must complete the assignment within 3 days of receiving the task.",
+      "explanation": "Total completion timeframe is 3 days.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-C002",
+      "title": "Framework Constraint",
+      "quote": "Framework: Next.js",
+      "explanation": "Project must be built using Next.js framework.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-C003",
+      "title": "Styling Constraint",
+      "quote": "Styling: TailwindCSS",
+      "explanation": "Project styling must use TailwindCSS.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-C004",
+      "title": "Real-Time Communication Technology Constraint",
+      "quote": "Real-Time Communication: WebSockets or any suitable solution",
+      "explanation": "Must use WebSockets or compatible real-time technology.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-C005",
+      "title": "Hosting Constraint",
+      "quote": "Hosting: Deploy on a platform such as Vercel, Heroku, or Netlify.",
+      "explanation": "Must be deployed to a frontend cloud hosting platform.",
+      "confidence": "High"
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "REQ-D001",
+      "title": "Code Repository",
+      "quote": "Code Repository: Link to a GitHub (or similar) repository with clear instructions for running the project.",
+      "explanation": "Public or shared code repository with run instructions.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-D002",
+      "title": "Deployed Application",
+      "quote": "Deployed Application: Live link to the deployed project.",
+      "explanation": "Accessible live URL for the deployed web app.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-D003",
+      "title": "README File",
+      "quote": "Readme File: Include a README with an overview of the project, any setup instructions, and descriptions of any bonus features implemented.",
+      "explanation": "Root README.md documentation.",
+      "confidence": "High"
+    },
+    {
+      "id": "REQ-D004",
+      "title": "Development Planning Documentation",
+      "quote": "Development Planning documentation: Project Structure: Explanation of the folder/file structure. Design: design decisions made for UI/UX in different screen size. Component Architecture: Description of main components and their purposes. Real-Time Synchronization Flow: Summary of how real-time updates are handled and synchronized.",
+      "explanation": "Must include documentation covering Project Structure, UI/UX Design, Component Architecture, and Real-Time Synchronization Flow.",
+      "confidence": "High"
+    }
+  ],
+  "missing_information": [
+    {
+      "id": "INFO-M001",
+      "topic": "Session / Room Management for Patient-Staff Coupling",
+      "description": "The specification does not clarify whether single or multi-session (room IDs / patient IDs) synchronization is required, or if a single global sync pair is sufficient.",
+      "confidence": "Medium"
+    },
+    {
+      "id": "INFO-M002",
+      "topic": "Inactivity Threshold Definition",
+      "description": "The requirement specifies an 'inactive in the form' status indicator, but does not define the explicit timeout duration (e.g., 5 seconds, 10 seconds, or 30 seconds of typing inactivity).",
+      "confidence": "Medium"
+    },
+    {
+      "id": "INFO-M003",
+      "topic": "Data Persistence",
+      "description": "The prompt does not explicitly request database storage or persistence after submission.",
+      "confidence": "High"
+    }
+  ],
+  "bonus_features": [
+    {
+      "id": "REQ-B001",
+      "title": "Mock Data Generator",
+      "category": "UX/UI & DevEx",
+      "is_core": false,
+      "description": "Provides a 1-click sample data filling button for quick evaluator testing."
+    },
+    {
+      "id": "REQ-B002",
+      "title": "Form Auto-Save & Local Backup",
+      "category": "Data Integrity",
+      "is_core": false,
+      "description": "Persists incomplete patient input to localStorage and restores on page reload."
+    },
+    {
+      "id": "REQ-B003",
+      "title": "Audit Trail / History Log",
+      "category": "Staff Monitoring",
+      "is_core": false,
+      "description": "Displays chronological stream of patient updates with timestamps on Staff View."
+    },
+    {
+      "id": "REQ-B004",
+      "title": "Field-Level Typing Indicator",
+      "category": "Real-Time UX",
+      "is_core": false,
+      "description": "Broadcasting focused field name so staff knows exactly which input is being edited."
+    },
+    {
+      "id": "REQ-B005",
+      "title": "Data Export (JSON & CSV)",
+      "category": "Staff Workflow",
+      "is_core": false,
+      "description": "Enables staff members to download patient form submissions in JSON or CSV format."
+    }
+  ]
+}
