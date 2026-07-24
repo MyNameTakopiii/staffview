@@ -49,9 +49,11 @@ A responsive, real-time patient input form and staff monitoring interface built 
 ### Option A: Local Development (without Docker)
 
 #### Prerequisites
+
 - **Bun**: `v1.3.x` or higher (or Node.js `v18.x`+)
 
 #### Steps
+
 1. **Install dependencies**:
    ```bash
    bun install

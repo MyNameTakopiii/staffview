@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { SyncProvider } from '@/context/SyncContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${inter.className} bg-main text-text-main min-h-screen transition-colors duration-200`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SyncProvider>{children}</SyncProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

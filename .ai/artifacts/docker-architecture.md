@@ -14,14 +14,14 @@ The application is dockerized for both **Development** (`dev`) and **Production*
 
 ## 2. Environment Configurations
 
-| Attribute | Development (`Dockerfile.dev`) | Production (`Dockerfile`) |
-| :--- | :--- | :--- |
-| **Base Image** | `oven/bun:1-alpine` | `oven/bun:1-alpine` |
+| Attribute          | Development (`Dockerfile.dev`)   | Production (`Dockerfile`)                     |
+| :----------------- | :------------------------------- | :-------------------------------------------- |
+| **Base Image**     | `oven/bun:1-alpine`              | `oven/bun:1-alpine`                           |
 | **Build Strategy** | Single stage + host volume mount | Multi-stage (`deps` -> `builder` -> `runner`) |
-| **Hot Reload** | Enabled (`bun run dev`) | Disabled (`bun run start`) |
-| **Security User** | Default | Non-root (`nextjs`, UID 1001) |
-| **Compose Spec** | `docker-compose.dev.yml` | `docker-compose.yml` |
-| **Exposed Port** | 3000 | 3000 |
+| **Hot Reload**     | Enabled (`bun run dev`)          | Disabled (`bun run start`)                    |
+| **Security User**  | Default                          | Non-root (`nextjs`, UID 1001)                 |
+| **Compose Spec**   | `docker-compose.dev.yml`         | `docker-compose.yml`                          |
+| **Exposed Port**   | 3000                             | 3000                                          |
 
 ---
 

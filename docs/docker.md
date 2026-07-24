@@ -7,6 +7,7 @@ This document describes the Docker configuration for running the **StaffView** a
 ## 🏗 Container Configurations
 
 ### 1. Development Mode (`Dockerfile.dev` & `docker-compose.dev.yml`)
+
 Designed for rapid local development with live hot-reloading (Fast Refresh).
 
 - **Base Image**: `oven/bun:1-alpine`
@@ -15,9 +16,11 @@ Designed for rapid local development with live hot-reloading (Fast Refresh).
 - **Port**: `3000:3000`
 
 #### Why `WATCHPACK_POLLING=true` is required for Real-Time Hot Reloading:
+
 When running Docker Desktop on **Windows**, file change events (e.g. `inotify`) from the Windows filesystem often do **not** automatically pass into the Linux container filesystem across volume mounts. By setting `WATCHPACK_POLLING=true`, Next.js / Webpack / Watchpack actively polls mounted files for changes, ensuring immediate Fast Refresh / HMR updates in the browser whenever source code is edited.
 
 #### Running Development Container:
+
 ```bash
 # Using Docker Compose
 docker compose -f docker-compose.dev.yml up --build -d
@@ -30,6 +33,7 @@ docker run -p 3000:3000 -v $(pwd):/app -v /app/node_modules -e WATCHPACK_POLLING
 ---
 
 ### 2. Production Mode (`Dockerfile` & `docker-compose.yml`)
+
 Optimized for deployment with multi-stage builds and security hardening.
 
 - **Stage 1 (`deps`)**: Installs production dependencies.
@@ -38,6 +42,7 @@ Optimized for deployment with multi-stage builds and security hardening.
 - **Port**: `3000:3000`
 
 #### Running Production Container:
+
 ```bash
 # Using Docker Compose
 docker compose up --build -d

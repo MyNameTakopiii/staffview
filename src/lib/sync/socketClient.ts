@@ -16,6 +16,3 @@ export const initSocket = async (): Promise<Socket> => {
 };
 
 export const getSocket = (): Socket | null => socket;
-
-
-

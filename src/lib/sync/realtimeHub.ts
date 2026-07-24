@@ -29,7 +29,8 @@ class RealtimeHub {
     // Detect if running on Vercel deployment
     const isVercelHost =
       typeof window !== 'undefined' &&
-      (window.location.hostname.endsWith('vercel.app') || window.location.hostname.includes('vercel'));
+      (window.location.hostname.endsWith('vercel.app') ||
+        window.location.hostname.includes('vercel'));
 
     // On Vercel without an external socket URL, Socket.IO fails due to serverless execution model
     const isVercelServerless = isVercelHost && !socketUrl;
@@ -194,7 +195,8 @@ class RealtimeHub {
           lastHash = currentHash;
           if (data.patientData) this.emitLocal('staff_patient_update', data.patientData);
           if (data.status) this.emitLocal('staff_patient_status', data.status);
-          if (data.activeField !== undefined) this.emitLocal('staff_patient_focus', data.activeField);
+          if (data.activeField !== undefined)
+            this.emitLocal('staff_patient_focus', data.activeField);
         }
       } catch {
         // Ignore polling errors silently
